@@ -2145,7 +2145,7 @@ const App = () => {
                                 {/* Right: Image (Overhanging) - 使用像素值偏移 */}
                                 {activeTemplate.imageUrl && (
                                     <div 
-                                        className="w-full md:w-auto mt-4 md:mt-0 relative md:-mr-[60px] md:-mt-[60px] z-20 flex-shrink-0"
+                                        className="w-full md:w-auto mt-4 md:mt-0 relative md:-mr-[50px] md:-mt-[50px] z-20 flex-shrink-0"
                                     >
                                         <div 
                                             className="bg-white p-1.5 md:p-2 rounded-lg md:rounded-xl shadow-lg md:shadow-xl transform md:rotate-2 border border-gray-100/50 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-2xl group/image w-full md:w-auto"
