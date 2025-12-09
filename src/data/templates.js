@@ -126,4 +126,3 @@ export const INITIAL_TEMPLATES_CONFIG = [
     selections: {}
   }
 ];
-

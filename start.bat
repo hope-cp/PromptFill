@@ -33,14 +33,16 @@ if %errorlevel% equ 0 (
 
 :: 2. Check node_modules
 echo [Step 2/3] Checking dependencies...
-set NEED_INSTALL=0
-if not exist "node_modules" set NEED_INSTALL=1
+set MISSING_DEPS=0
+if not exist "node_modules" set MISSING_DEPS=1
 if exist "node_modules" (
-    if not exist "node_modules\.bin\vite.cmd" set NEED_INSTALL=1
+    :: Check if vite actually exists
+    if not exist "node_modules\vite\bin\vite.js" set MISSING_DEPS=1
 )
 
-if %NEED_INSTALL%==1 (
+if %MISSING_DEPS%==1 (
     echo.
+    echo [INFO] Dependencies are missing or incomplete.
     echo [INFO] Installing dependencies...
     echo [INFO] This may take a few minutes...
     echo.
@@ -70,8 +72,8 @@ echo.
 echo -------------------------------------------------------
 echo.
 
-:: Use --open to let Vite handle browser opening
-call %NPM_CMD% run dev -- --open
+:: Use npm run dev:open to handle browser opening reliably
+call %NPM_CMD% run dev:open
 
 echo.
 echo -------------------------------------------------------
