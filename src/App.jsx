@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Copy, Plus, X, Settings, Check, Edit3, Eye, Trash2, FileText, Pencil, Copy as CopyIcon, Globe, ChevronDown, ChevronUp, ChevronRight, ChevronLeft, GripVertical, Download, Image as ImageIcon, List, Undo, Redo, Maximize2, RotateCcw, LayoutGrid, Sidebar, Search, ArrowRight, User, ArrowUpRight, ArrowUpDown, RefreshCw, Sparkles } from 'lucide-react';
+import { Copy, Plus, X, Settings, Check, Edit3, Eye, Trash2, FileText, Pencil, Copy as CopyIcon, Globe, ChevronDown, ChevronUp, ChevronRight, ChevronLeft, GripVertical, Download, Upload, Image as ImageIcon, List, Undo, Redo, Maximize2, RotateCcw, LayoutGrid, Sidebar, Search, ArrowRight, User, ArrowUpRight, ArrowUpDown, RefreshCw, Sparkles } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 // ====== 导入数据配置 ======
@@ -551,6 +551,9 @@ const MobileAnimatedSlogan = React.memo(({ isActive, language }) => {
 // Poster View Animated Slogan Constants - 已移至 constants/slogan.js
 
 const App = () => {
+  // 当前应用代码版本 (必须与 package.json 和 version.json 一致)
+  const APP_VERSION = "0.5.1";
+
   // 临时功能：瀑布流样式管理
   const [masonryStyleKey, setMasonryStyleKey] = useState('poster');
   const [isStyleMenuOpen, setIsStyleMenuOpen] = useState(false);
@@ -567,9 +570,7 @@ const App = () => {
   const [templates, setTemplates] = useStickyState(INITIAL_TEMPLATES_CONFIG, "app_templates_v10");
   const [activeTemplateId, setActiveTemplateId] = useStickyState("tpl_default", "app_active_template_id_v4");
   
-  // 更新检测状态
   const [lastAppliedDataVersion, setLastAppliedDataVersion] = useStickyState("", "app_data_version_v1");
-  const [lastAppliedAppVersion, setLastAppliedAppVersion] = useStickyState("", "app_version_v1");
   const [showDataUpdateNotice, setShowDataUpdateNotice] = useState(false);
   const [showAppUpdateNotice, setShowAppUpdateNotice] = useState(false);
   
@@ -671,8 +672,8 @@ const App = () => {
         if (response.ok) {
           const data = await response.json();
           
-          // 检查应用版本更新
-          if (data.appVersion && data.appVersion !== lastAppliedAppVersion) {
+          // 检查应用版本更新 - 使用代码内常量 APP_VERSION 进行比对
+          if (data.appVersion && data.appVersion !== APP_VERSION) {
             setShowAppUpdateNotice(true);
           }
           
@@ -690,7 +691,7 @@ const App = () => {
     const timer = setInterval(checkUpdates, 5 * 60 * 1000); // 5分钟检查一次
     
     return () => clearInterval(timer);
-  }, [lastAppliedAppVersion, lastAppliedDataVersion]);
+  }, [lastAppliedDataVersion]); // 移除 lastAppliedAppVersion 依赖
 
   // History State for Undo/Redo
   const [historyPast, setHistoryPast] = useState([]);
@@ -2431,7 +2432,7 @@ const App = () => {
                         handleExportAllTemplates={handleExportAllTemplates}
                         handleCompleteBackup={handleCompleteBackup}
                         handleImportAllData={handleImportAllData}
-                        handleResetSystemData={handleResetSystemData}
+                        handleResetSystemData={handleRefreshSystemData}
                         handleClearAllData={handleClearAllData}
                         SYSTEM_DATA_VERSION={SYSTEM_DATA_VERSION}
                         t={t}
@@ -2668,7 +2669,7 @@ const App = () => {
                   <p className="text-sm font-bold tracking-tight text-gray-700">{t('refresh_system')}</p>
                 </div>
                 <button
-                  onClick={handleResetSystemData}
+                  onClick={handleRefreshSystemData}
                   className="w-full text-center px-5 py-4 text-sm font-semibold bg-white hover:bg-orange-50 text-orange-600 rounded-2xl transition-all duration-300 border-2 border-orange-100 hover:border-orange-200 flex items-center justify-center gap-2.5 shadow-sm"
                 >
                   <RefreshCw size={18} />
